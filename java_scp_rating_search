@@ -1,0 +1,85 @@
+public class SimpleSample {
+
+ 
+
+    public static void main(String[] args) throws MalformedURLException, IOException {
+        URL url = new URL("https://scp-wiki.wikidot.com/scp6000contesthub");
+        InputStream is = url.openStream();
+        int ptr = 0;
+        StringBuffer buffer = new StringBuffer();
+        while ((ptr = is.read()) != -1) {
+            buffer.append((char) ptr);
+        }
+        String re = buffer.toString();
+        int a = re.indexOf("Entries");
+        int b = 0;
+        re = re.substring(a);
+        List<String> list = new ArrayList();
+        boolean check = true;
+        while (check) {
+            a = re.indexOf("href") + 6;
+
+            re = re.substring(a);
+            a = 0;
+            b = re.indexOf("\"");
+            if (re.substring(a, b).contains("6000") == false) {
+                check = false;
+                break;
+            }
+            list.add(re.substring(a, b));
+            re = re.substring(b);
+
+            b = 0;
+        }
+      
+        String page = "https://scp-wiki.wikidot.com";
+        TreeMap<Integer, String> map = new TreeMap<Integer, String>(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                if (o1.equals(o2)) {
+                    return 1;
+                } else {
+                    return o1 - o2;
+                }
+            }
+        });
+        for (String t : list) {
+           if(t.contains("/adult:6000contestyossipossi")){
+               t="/adult:6000contestyossipossi/noredirect/true";
+           }
+            page = page + t;
+            url = new URL(page);
+            is = url.openStream();
+            ptr = 0;
+            buffer = new StringBuffer();
+            while ((ptr = is.read()) != -1) {
+                buffer.append((char) ptr);
+            }
+            re = buffer.toString();
+            re = re.substring(re.indexOf("prw54355"));
+            re = re.substring(re.indexOf("prw54355") + 10, re.indexOf("<"));
+            //  System.out.println(" "+re);
+            page = "https://scp-wiki.wikidot.com";
+            if (re.contains("+") == true) {
+                re = re.substring(1);
+            }
+            //  System.out.println(re);
+            int rate = Integer.valueOf(re);
+            //   System.out.println(rate);
+            map.put(rate, page + t);
+
+        }
+        // System.out.println(map);
+        List<String> li = new ArrayList<String>();
+        for (Map.Entry<Integer, String> entry : map.entrySet()) {
+            String out = entry.getKey() + " " + entry.getValue();
+            
+            li.add(out);
+           // System.out.println(entry.getKey() + " " + entry.getValue());
+        }
+        for(int i=li.size()-1;i>=0;i--){
+            System.out.println(li.get(i));
+        }
+    }
+
+}
